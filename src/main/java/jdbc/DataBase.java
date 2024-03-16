@@ -25,10 +25,15 @@ public class DataBase {
             System.out.println("Creating table ...");
             statement = connection.createStatement();
 
-            String sql = "CREATE TABLE H2_TEST " +
-                    "(ID NUMBER not NULL, " +
-                    " STR VARCHAR(20), " +
-                    " PRIMARY KEY ( ID ))";
+            String sql = "CREATE TABLE IF NOT EXISTS Accounts ( " +
+                    "accountNumber INTEGER PRIMARY KEY," +
+                    "accountHolderName VARCHAR(255) NOT NULL,"+
+                    "balance REAL NOT NULL);" +
+                    "CREATE TABLE IF NOT EXISTS Transactions (" +
+                    "transactionNumber INTEGER PRIMARY KEY ," +
+                    "account INTEGER NOT NULL," +
+                    "amount REAL NOT NULL," +
+                    "FOREIGN KEY (account) REFERENCES Accounts(accountNumber));";
             statement.executeUpdate(sql);
             System.out.println("Created table in given database...");
 
@@ -58,13 +63,12 @@ public class DataBase {
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
                 String accountNumber = resultSet.getString("ACCOUNT_NUMBER");
-                Double balance = resultSet.getDouble("AMOUNT");
+                Double balance = resultSet.getDouble("BALANCE");
 
-                // Display values
                 System.out.println("id: " + id);
                 System.out.println("accountNumber: " + accountNumber);
                 System.out.println("balance: " + balance);
-                System.out.println("=========================================");
+
             }
 
             resultSet.close();
